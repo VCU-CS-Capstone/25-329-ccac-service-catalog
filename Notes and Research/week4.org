@@ -1,0 +1,17 @@
+* ansable github
+** this can be used to write scripts...
+
+might want to
+* databases
+break into own files
+have a folder for each database
+
+* ansible
+define a server, then use ansible to create it and deploy it
+
+website runs an ansible script behind the scenes and downloads to the person's computer
+most servers need a programming language
+identify OS for the servers
+
+flesh out software and hardware requirements
+find complementing software for the servers
