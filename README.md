@@ -14,7 +14,8 @@ Identify several servers with software installed as golden images that users may
 **Note:** Commits behind this fork could be automatically synced, meaning that changes made in the template are pushed into your repo. Please do not discard commits ahead (these are the updates you make to this repository).
 
 ## Project Team
-- *Robert Dahlberg*  - *CCAC* - Mentor/Technical Advisor/Faculty Advisor
+- *Robert Dahlberg*  - *CCAC* - Mentor/Technical Advisor
+- *Ahmet Sonmez* - *VCU* - Faculty Advisor
 - *Akhil Manoj* - *Computer Science* - Student Team Member
 - *Bilal Othman* - *Computer Science* - Student Team Member
 - *Nick Arthur* - *Computer Science & Applied Mathematics* - Student Team Member
