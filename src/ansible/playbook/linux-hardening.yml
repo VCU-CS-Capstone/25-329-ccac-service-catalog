@@ -1,0 +1,9 @@
+# Ansible Playbook for hardening Linux VMs
+# Based on https://galaxy.ansible.com/ui/repo/published/devsec/hardening/content/role/os_hardening/ 
+- name: Linux Hardening
+  gather_facts: false
+  hosts: *linux*
+  become: yes
+
+  roles:
+    - name: devsec.hardening.os_hardening
