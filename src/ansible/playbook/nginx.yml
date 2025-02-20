@@ -1,0 +1,12 @@
+# Run the playbook with the command:
+# ansible-playbook nginx.yml --connection=local
+---
+- hosts: 127.0.0.1
+  connection: local
+  tasks:
+    - name: Ensure nginx is up-to-date
+      apt: name=nginx state=latest
+    - name:
+      service:
+        name: nginx
+        state: started
