@@ -1,0 +1,41 @@
+# Ansible Playbook for setting up Linux VMs to allow SSH connection with passoword
+# ansible-playbook playbook/setup-linux.yml -i inventory/inventory.ini --private-key="service-catalog.pem" -e "username=username password=pass"
+---
+- name: Configure SSH and create new user
+  hosts: all
+  become: yes
+  vars:
+    new_username: "{{ username | default('newuser') }}"
+    new_user_password: "{{ password | default('changeme') }}"
+
+  tasks:
+    - name: Update sshd config to allow SSH Login without .pem key file
+      lineinfile:
+        path: "/etc/ssh/sshd_config"
+        regex: "^(#)?{{item.key}}"
+        line: "{{item.key}} {{item.value}}"
+        state: present
+      loop:
+        - { key: "PermitRootLogin", value: "yes" }
+        - { key: "PasswordAuthentication", value: "yes" } 
+      
+    - name: Update 60-cloud-init.conf to allow password authentication 
+      lineinfile:
+        path: /etc/ssh/sshd_config.d/60-cloudimg-settings.conf
+        regexp: '^PasswordAuthentication'
+        line: 'PasswordAuthentication yes'
+    
+    - name: Create new user
+      user:
+        name: "{{ new_username }}"
+        password: "{{ new_user_password | password_hash('sha512') }}"
+        groups: sudo
+        shell: /bin/bash
+        update_password: on_create
+        append: yes
+        state: present
+
+    - name: Restart SSH
+      service:
+        name: sshd
+        state: restarted
