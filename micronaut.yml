@@ -1,0 +1,48 @@
+---
+- name: Install Micronaut on Ubuntu
+  hosts: all
+  become: yes
+  tasks:
+    - name: Update APT package index
+      apt:
+        update_cache: yes
+
+    - name: Install JDK 21 or greater
+      apt:
+        name: openjdk-21-jdk
+        state: present
+
+    - name: Check if Micronaut CLI is already installed
+      stat:
+        path: /usr/local/bin/mn
+      register: micronaut_cli_check
+
+    - name: Download Micronaut CLI if not installed
+      get_url:
+        url: https://github.com/micronaut-projects/micronaut-starter/releases/latest/download/micronaut-cli.zip
+        dest: /tmp/micronaut-cli.zip
+      when: not micronaut_cli_check.stat.exists
+
+    - name: Unzip Micronaut CLI
+      unarchive:
+        src: /tmp/micronaut-cli.zip
+        dest: /usr/local/bin/
+        remote_src: yes
+      when: not micronaut_cli_check.stat.exists
+
+    - name: Ensure mn command is executable
+      file:
+        path: /usr/local/bin/mn
+        mode: '0755'
+      when: not micronaut_cli_check.stat.exists
+
+    - name: Install IntelliJ IDEA (Community Edition)
+      snap:
+        name: intellij-idea-community
+        state: present
+
+    - name: Clean up
+      file:
+        path: /tmp/micronaut-cli.zip
+        state: absent
+      when: not micronaut_cli_check.stat.exists
