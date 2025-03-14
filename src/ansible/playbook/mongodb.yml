@@ -1,7 +1,10 @@
 ---
-- name: Install and Configure MongoDB on Ubuntu
+- name: Install and Configure MongoDB on Ubuntu 22.04
   hosts: all
-  become: yes  # Run tasks with sudo privileges
+  become: yes
+  vars:
+    mongo_version: "8.0"
+    mongo_minor_version: "8.0.4"
 
   tasks:
     - name: Update apt cache
@@ -10,18 +13,19 @@
 
     - name: Import MongoDB GPG key
       apt_key:
-        url: https://www.mongodb.org/static/pgp/server-6.0.asc
+        url: "https://www.mongodb.org/static/pgp/server-{{ mongo_version }}.asc"
         state: present
 
     - name: Add MongoDB repository
       apt_repository:
-        repo: "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/6.0 multiverse"
+        filename: "/etc/apt/sources.list.d/mongodb-org-{{ mongo_version }}.list"
+        repo: "deb https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/{{ mongo_version }} multiverse"
         state: present
-        filename: mongodb-org
+        update_cache: yes
 
     - name: Install MongoDB
       apt:
-        name: mongodb-org
+        name: "mongodb-org={{ mongo_minor_version }}"
         state: present
         update_cache: yes
 

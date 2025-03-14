@@ -1,16 +1,23 @@
 ---
-- name: Install MySQL on Ubuntu
+- name: Install MySQL on Ubuntu 22.04
   hosts: all
   become: yes
+  vars:
+    mysql_version: "8.0"
+    
   tasks:
     - name: Update apt cache
       apt:
         update_cache: yes
 
-    - name: Install MySQL server
-      apt:
-        name: mysql-server
+    - name: Install the MySQL packages
+      package:
+        name: "{{ item }}"
         state: present
+      with_items:
+        - "mysql-server-{{ mysql_version }}"
+        - "mysql-client-{{ mysql_version }}"
+        - "libmysqlclient-dev"
 
     - name: Ensure MySQL service is running and enabled
       service:
