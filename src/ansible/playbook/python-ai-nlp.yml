@@ -1,0 +1,46 @@
+- name: Install and Configure AI/NLP Development Server on Ubuntu 22.04
+  hosts: all
+  become: yes
+  vars:
+    minimum_python_version: "3.10.0"
+
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Check Python version
+      fail:
+        msg: "Python Version {{ ansible_python_version }} to low, please upgrade to {{ minimum_python_version }} to higher"
+      when: "minimum_python_version is version(ansible_python_version, '>=')"
+    
+    - name: Install pip3 if not installed
+      apt:
+        name: python3-pip=22.0.2+dfsg-1ubuntu0.5
+        state: present
+    
+    - name: Install Django python package
+      ansible.builtin.pip:
+        name:
+          - numpy
+          - pandas
+          - matplotlib
+          - scipy
+          - scikit-learn
+          - tensorflow
+          - tensorboard
+          - transformers
+          - spacys
+          - seaborn
+          - plotly
+          - pencv-python
+          - pillow
+          - albumentations
+          - jupyterlab
+          - tqdm
+          - h5py
+          - requests
+          - csv
+          - beautifulsoup4
+
+    
