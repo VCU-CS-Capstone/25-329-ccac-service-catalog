@@ -1,48 +1,72 @@
 ---
 - name: Install Micronaut on Ubuntu
   hosts: all
-  become: yes
+  vars:
+    micronaut_version: "4.7.6"
+    jdk_version: "21"
+
   tasks:
     - name: Update APT package index
       apt:
         update_cache: yes
+      become: yes
 
-    - name: Install JDK 21 or greater
+    - name: "Install JDK {{ jdk_version }} or greater"
       apt:
-        name: openjdk-21-jdk
+        name: "openjdk-{{ jdk_version }}-jdk"
         state: present
+      become: yes
+    
+    - name: Install unzip
+      apt:
+        name: unzip
+        state: present
+      become: yes
 
     - name: Check if Micronaut CLI is already installed
       stat:
-        path: /usr/local/bin/mn
+        path: /usr/local/bin/micronaut-cli
       register: micronaut_cli_check
 
-    - name: Download Micronaut CLI if not installed
-      get_url:
-        url: https://github.com/micronaut-projects/micronaut-starter/releases/latest/download/micronaut-cli.zip
-        dest: /tmp/micronaut-cli.zip
+    - name: Install Micronaut CLI if not installed
       when: not micronaut_cli_check.stat.exists
+      block:
+        - name: Download Micronaut CLI
+          get_url:
+            url: "https://github.com/micronaut-projects/micronaut-starter/releases/download/v{{ micronaut_version }}/micronaut-cli-{{ micronaut_version }}.zip"
+            dest: /tmp/micronaut-cli.zip
+          become: no
 
-    - name: Unzip Micronaut CLI
-      unarchive:
-        src: /tmp/micronaut-cli.zip
-        dest: /usr/local/bin/
-        remote_src: yes
-      when: not micronaut_cli_check.stat.exists
+        - name: Unzip Micronaut CLI
+          unarchive:
+            src: /tmp/micronaut-cli.zip
+            dest: /usr/local/bin/
+            remote_src: yes
+          become: yes
 
-    - name: Ensure mn command is executable
-      file:
-        path: /usr/local/bin/mn
+        - name: Rename the extracted directory
+          command: mv /usr/local/bin/micronaut-cli-{{ micronaut_version }} /usr/local/bin/micronaut-cli
+          become: yes
+
+        - name: Clean up
+          file:
+            path: /tmp/micronaut-cli.zip
+            state: absent
+    
+    - name: Set environment variables for Micronaut
+      copy:
+        content: |
+          export MICRONAUT_HOME="/usr/local/bin/micronaut-cli"
+          export PATH="$MICRONAUT_HOME/bin:$PATH"
+        dest: /etc/profile.d/micronaut.sh
         mode: '0755'
-      when: not micronaut_cli_check.stat.exists
+      become: yes
 
-    - name: Install IntelliJ IDEA (Community Edition)
-      snap:
-        name: intellij-idea-community
-        state: present
-
-    - name: Clean up
-      file:
-        path: /tmp/micronaut-cli.zip
-        state: absent
-      when: not micronaut_cli_check.stat.exists
+    - name: Validate Micronaut CLI installation
+      shell:
+        cmd: |
+          source /etc/profile.d/micronaut.sh
+          mn --version
+        executable: /bin/bash
+      register: micronaut_version_output
+      failed_when: micronaut_version_output.rc != 0
