@@ -19,7 +19,7 @@
         name: python3-pip=22.0.2+dfsg-1ubuntu0.5
         state: present
     
-    - name: Install Django python package
+    - name: Install Python packages
       ansible.builtin.pip:
         name:
           - numpy

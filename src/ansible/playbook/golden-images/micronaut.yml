@@ -1,5 +1,5 @@
 ---
-- name: Install Micronaut on Ubuntu
+- name: Install Micronaut on Ubuntu 22.04
   hosts: all
   vars:
     micronaut_version: "4.7.6"
@@ -11,7 +11,7 @@
         update_cache: yes
       become: yes
 
-    - name: "Install JDK {{ jdk_version }} or greater"
+    - name: "Install JDK {{ jdk_version }}"
       apt:
         name: "openjdk-{{ jdk_version }}-jdk"
         state: present
