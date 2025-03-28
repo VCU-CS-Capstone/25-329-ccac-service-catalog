@@ -1,7 +1,7 @@
-# *CCAC Service Catalog*
-## *Commonwealth Center for Advanced Computing (CCAC)*
+# *VCU Service Catalog*
+## *Virginia Commonwealth University*
 ## *Short Project Description*
-Identify several servers with software installed as golden images that users may provision for their projects. Work with stakeholders to identify the kind of servers they would need, and document the specifications for installing the software. Then procure the server and install the software. Work with the CCAC team to set up the golden images in the service Catalog so users can select a server out of the service catalog and provision it into their account.
+Identify several servers with software installed as golden images that users may provision for their projects. Work with stakeholders to identify the kind of servers they would need, and document the specifications for installing the software. Then procure the server and install the software. Work with the VCU team to set up the golden images in the service catalog so users can select a server out of the service catalog and provision it into their account.
 
 | Folder | Description |
 |---|---|
@@ -14,7 +14,7 @@ Identify several servers with software installed as golden images that users may
 **Note:** Commits behind this fork could be automatically synced, meaning that changes made in the template are pushed into your repo. Please do not discard commits ahead (these are the updates you make to this repository).
 
 ## Project Team
-- *Robert Dahlberg*  - *CCAC* - Mentor/Technical Advisor
+- *Robert Dahlberg*  - *Independent Contractor* - Mentor/Technical Advisor
 - *Ahmet Sonmez* - *VCU* - Faculty Advisor
 - *Akhil Manoj* - *Computer Science* - Student Team Member
 - *Bilal Othman* - *Computer Science* - Student Team Member
